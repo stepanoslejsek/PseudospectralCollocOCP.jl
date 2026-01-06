@@ -29,3 +29,12 @@ control_bounds = [(-umax, umax)]
 state_bounds = [(-dmax, dmax), nothing, nothing, nothing]
 
 t, x, u, obj = solve_ocp(N=100, tf=tf, x0=x0, xf=xf, dynamics=dynamics, running_cost=running_cost, nx=nx, nu=nu)
+
+fig = Figure()
+ax1 = Axis(fig[1, 1], ylabel="x [m]")
+ax2 = Axis(fig[2, 1], ylabel="theta [rad]")
+ax3 = Axis(fig[3, 1], xlabel="t [s]", ylabel="F [N]")
+scatterlines!(ax1, t, x[1, :], color=:blue)
+scatterlines!(ax2, t, x[2, :], color=:blue)
+scatterlines!(ax3, t, u[1, :], color=:blue)
+fig

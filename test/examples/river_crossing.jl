@@ -6,7 +6,6 @@ R(w) = Rmax * exp(-(w / wmax)^2)
 U(x, y) = R(y - sin(x)) / sqrt(1 + cos(x)^2)
 V(x, y) = R(y - sin(x)) * cos(x) / sqrt(1 + cos(x)^2)
 
-
 function dynamics(x, u, t)
     dot_x = x[3] * cos(x[4]) + U(x[1], x[2])
     dot_y = x[3] * sin(x[4]) + V(x[1], x[2])
@@ -28,3 +27,10 @@ state_bounds = [nothing, (southern_bank, northern_bank), (0.0, 4.0), nothing]
 control_bounds = [(-100.0, 100.0), (-5.0, 5.0)]
 
 t, x, u, obj = solve_ocp(N=50, tf=nothing, x0=x0, xf=xf, dynamics=dynamics, running_cost=running_cost, nx=4, nu=2, state_bounds=state_bounds, control_bounds=control_bounds)
+
+fig = Figure()
+ax = Axis(fig[1, 1], xlabel="x [m]", ylabel="y [m]")
+scatterlines!(ax, x[1, :], x[2, :], color=:blue)
+lines!(ax, x[1, :], southern_bank(x, 0, 0), color=:black, linewidth=3)
+lines!(ax, x[1, :], northern_bank(x, 0, 0), color=:black, linewidth=3)
+fig
