@@ -23,7 +23,7 @@ function solve_ocp(;
         @variable(model, tf >= 0, start = 5.0)
     end
 
-    t = (tf + t0) / 2 .+ (tf - t0) / 2 .* tau
+    t = τ2t(tau, t0, tf)
 
     @variable(model, x[1:nx, 1:N])
     @variable(model, u[1:nu, 1:N])
@@ -98,5 +98,15 @@ function solve_ocp(;
         primal_status      = $(primal_status(model))
         objective_value    = $(objective_value(model))
     """)
-    return value.(t), value.(x), value.(u), objective_value(model)
+
+    x = value.(x)
+    u = value.(u)
+    t = value.(t)
+    obj = objective_value(model)
+
+    w_bary = compute_barycentric_weights(tau, N)
+
+    x_interp(tt) = x * [lagrange_polynomial(n, t2τ(tt, t[1], t[end]), tau, w_bary) for n in 1:N]
+    u_interp(tt) = u * [lagrange_polynomial(n, t2τ(tt, t[1], t[end]), tau, w_bary) for n in 1:N]
+    return t, x, u, obj, x_interp, u_interp
 end

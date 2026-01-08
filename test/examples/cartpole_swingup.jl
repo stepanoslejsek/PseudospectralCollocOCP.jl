@@ -28,7 +28,7 @@ xf = [d, pi, 0, 0]
 control_bounds = [(-umax, umax)]
 state_bounds = [(-dmax, dmax), nothing, nothing, nothing]
 
-t, x, u, obj = solve_ocp(N=100, tf=tf, x0=x0, xf=xf, dynamics=dynamics, running_cost=running_cost, nx=nx, nu=nu)
+t, x, u, obj = solve_ocp(N=50, tf=tf, x0=x0, xf=xf, dynamics=dynamics, running_cost=running_cost, nx=nx, nu=nu)
 
 fig = Figure()
 ax1 = Axis(fig[1, 1], ylabel="x [m]")
